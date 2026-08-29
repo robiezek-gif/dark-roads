@@ -1,15 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
   <meta charset="UTF-8">
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>Dark Roads Quest Board</title>
 
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
+
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
-  
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap"
+    rel="stylesheet"
+  >
+
+
   <style>
 
     body {
@@ -19,208 +29,297 @@
       font-family: "MedievalSharp", cursive;
     }
 
+
     #adventure-board {
       max-width: 1200px;
       margin: auto;
       padding: 40px 20px;
+
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+
+      grid-template-columns:
+        repeat(auto-fit, minmax(330px, 1fr));
+
       gap: 30px;
     }
 
+
     .quest {
-  position: relative;
-  height: 460px;
-  cursor: pointer;
+      position: relative;
 
-      .quest-detail-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-top: 20px;
-  }
+      height: 460px;
 
-  .quest-detail-grid .detail-section {
-    margin: 0;
-  }
+      cursor: pointer;
 
-  /* Full-width sections */
+      background-image:
+        linear-gradient(
+          rgba(255, 235, 190, 0.40),
+          rgba(255, 235, 190, 0.40)
+        ),
+        url("images/quest-background.png");
 
-  .description-section,
-  .dm-section,
-  .before-signup-section,
-  .availability-section,
-  .adventurers-section {
-    grid-column: 1 / -1;
-  }
+      background-size:
+        100% 100%,
+        100% auto;
+
+      background-position:
+        center,
+        center -120px;
+
+      background-repeat: no-repeat;
+
+      color: #24150a;
+
+      text-shadow:
+        0 1px 2px rgba(255, 240, 210, 0.75);
+
+      padding: 70px 35px 40px;
+
+      box-sizing: border-box;
+
+      overflow: hidden;
+
+      transition: height 0.35s ease;
+    }
 
 
-  /* PHONE LAYOUT */
+    .quest:hover {
+      transform: scale(1.02);
+    }
 
-  @media (max-width: 600px) {
+
+    .quest-summary {
+      text-align: center;
+
+      color: #ffffff;
+
+      text-shadow:
+        0 2px 3px rgba(0, 0, 0, 0.8);
+    }
+
+
+    .quest-number {
+      font-size: 1.6rem;
+
+      font-weight: bold;
+
+      margin-bottom: 10px;
+    }
+
+
+    .quest-title {
+      font-size: 2rem;
+
+      font-weight: bold;
+
+      margin-bottom: 20px;
+    }
+
+
+    .reward {
+      font-size: 1.1rem;
+
+      font-weight: bold;
+
+      margin-top: 25px;
+    }
+
+
+    .reward-text {
+      margin-top: 5px;
+
+      font-weight: normal;
+    }
+
+
+    .status {
+      display: inline-block;
+
+      margin-top: 20px;
+
+      padding: 7px 14px;
+
+      font-weight: bold;
+
+      border-radius: 4px;
+
+      background:
+        rgba(255, 255, 255, 0.45);
+    }
+
+
+    .status.full {
+      color: #7a3a14;
+    }
+
+
+    .status.canceled {
+      color: #7d1515;
+    }
+
+
+    .quest-details {
+      display: none;
+
+      margin-top: 25px;
+
+      padding-top: 20px;
+
+      border-top:
+        2px solid rgba(50, 30, 15, 0.35);
+
+      text-align: center;
+    }
+
+
+    .quest.expanded .quest-details {
+      display: block;
+    }
+
+
+    .quest.expanded {
+      height: auto;
+
+      min-height: 900px;
+
+      background-size:
+        100% 100%;
+    }
+
+
+    .detail-section {
+      margin-bottom: 18px;
+    }
+
+
+    .detail-section strong {
+      display: block;
+
+      margin-bottom: 6px;
+
+      text-align: center;
+
+      font-size: 1.15em;
+
+      text-decoration: underline;
+    }
+
+
+    .adventurers {
+      margin-top: 8px;
+
+      padding-left: 0;
+
+      list-style-position: inside;
+
+      text-align: center;
+    }
+
+
+    .adventurers li {
+      margin-bottom: 5px;
+    }
+
+
+    .player-count {
+      margin-top: 8px;
+
+      font-weight: bold;
+    }
+
+
+    .signup-button {
+      display: inline-block;
+
+      margin-top: 25px;
+
+      padding: 12px 22px;
+
+      background: #2d3f40;
+
+      color: white;
+
+      text-decoration: none;
+
+      font-weight: bold;
+
+      border-radius: 4px;
+    }
+
+
+    .signup-button:hover {
+      background: #d69f06;
+    }
+
+
+    .loading,
+    .error,
+    .empty {
+      grid-column: 1 / -1;
+
+      text-align: center;
+
+      font-size: 1.2rem;
+    }
+
+
+    /* QUEST DETAIL GRID */
 
     .quest-detail-grid {
-      grid-template-columns: 1fr;
+      display: grid;
+
+      grid-template-columns:
+        1fr 1fr;
+
+      gap: 16px;
+
+      margin-top: 20px;
     }
+
+
+    .quest-detail-grid .detail-section {
+      margin: 0;
+    }
+
+
+    /* FULL-WIDTH SECTIONS */
 
     .description-section,
     .dm-section,
     .before-signup-section,
     .availability-section,
     .adventurers-section {
-      grid-column: auto;
-    }
-
-  }
-
-</style>
-
-  background-image:
-    linear-gradient(
-      rgba(255, 235, 190, 0.40),
-      rgba(255, 235, 190, 0.40)
-    ),
-    url("images/quest-background.png");
-
-  background-size: 100% 100%, 100% auto;
-  background-position: center, center -120px;
-  background-repeat: no-repeat;
-
-  color: #24150a;
-  text-shadow: 0 1px 2px rgba(255, 240, 210, 0.75);
-  padding: 70px 35px 40px;
-
-  box-sizing: border-box;
-  overflow: hidden;
-
-  transition: height 0.35s ease;
-}
-
-    .quest:hover {
-      transform: scale(1.02);
-    }
-
-    .quest-summary {
-      text-align: center;
-      color: #ffffff;
-      text-shadow: 0 2px 3px rgba(0, 0, 0, 0.8);
-    }
-
-    .quest-number {
-      font-size: 1.6rem;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-
-    .quest-title {
-      font-size: 2rem;
-      font-weight: bold;
-      margin-bottom: 20px;
-    }
-
-    .reward {
-      font-size: 1.1rem;
-      font-weight: bold;
-      margin-top: 25px;
-    }
-
-    .reward-text {
-      margin-top: 5px;
-      font-weight: normal;
-    }
-
-    .status {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 7px 14px;
-      font-weight: bold;
-      border-radius: 4px;
-      background: rgba(255,255,255,0.45);
-    }
-
-    .status.full {
-      color: #7a3a14;
-    }
-
-    .status.canceled {
-      color: #7d1515;
-    }
-
-    .quest-details {
-  display: none;
-  margin-top: 25px;
-  padding-top: 20px;
-  border-top: 2px solid rgba(50,30,15,0.35);
-  text-align: center;
-}
-
-    .quest.expanded .quest-details {
-      display: block;
-    }
-
-    .quest.expanded {
-  height: auto;
-  min-height: 900px;
-      
-  background-size: 100% 100%;
-}
-    
-    .detail-section {
-      margin-bottom: 18px;
-    }
-
-    .detail-section strong {
-    display: block;
-    margin-bottom: 6px;
-    text-align: center;
-    font-size: 1.15em;
-    text-decoration: underline;
-    }
-
-    .adventurers {
-    margin-top: 8px;
-    padding-left: 0;
-    list-style-position: inside;
-    text-align: center;
-    }
-
-    .adventurers li {
-      margin-bottom: 5px;
-    }
-
-    .player-count {
-      margin-top: 8px;
-      font-weight: bold;
-    }
-
-    .signup-button {
-      display: inline-block;
-      margin-top: 25px;
-      padding: 12px 22px;
-      background: #2d3f40;
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-      border-radius: 4px;
-    }
-
-    .signup-button:hover {
-      background: #d69f06;
-    }
-
-    .loading,
-    .error,
-    .empty {
       grid-column: 1 / -1;
-      text-align: center;
-      font-size: 1.2rem;
     }
+
+
+    /* MOBILE LAYOUT */
+
+    @media (max-width: 600px) {
+
+      .quest-detail-grid {
+        grid-template-columns: 1fr;
+      }
+
+
+      .description-section,
+      .dm-section,
+      .before-signup-section,
+      .availability-section,
+      .adventurers-section {
+        grid-column: auto;
+      }
+
+    }
+
 
   </style>
+
 </head>
 
 
 <body>
+
 
   <main id="adventure-board">
 
@@ -233,6 +332,7 @@
 
   <script>
 
+
     /*
       QUEST BOARD DATA SOURCE
     */
@@ -244,8 +344,8 @@
     /*
       PLAYER SIGN-UP FORM
 
-      We will add your actual Google Form responder link here
-      once you give it to me.
+      Replace this later with your actual
+      Google Form responder link.
     */
 
     const signUpURL = "#";
@@ -258,43 +358,81 @@
     function parseCSV(text) {
 
       const rows = [];
+
       let row = [];
+
       let value = "";
+
       let insideQuotes = false;
+
 
       for (let i = 0; i < text.length; i++) {
 
         const character = text[i];
-        const nextCharacter = text[i + 1];
+
+        const nextCharacter =
+          text[i + 1];
+
 
         if (character === '"') {
 
-          if (insideQuotes && nextCharacter === '"') {
+          if (
+            insideQuotes &&
+            nextCharacter === '"'
+          ) {
+
             value += '"';
+
             i++;
+
           } else {
-            insideQuotes = !insideQuotes;
+
+            insideQuotes =
+              !insideQuotes;
+
           }
 
-        } else if (character === "," && !insideQuotes) {
-
-          row.push(value);
-          value = "";
 
         } else if (
-          (character === "\n" || character === "\r") &&
+          character === "," &&
           !insideQuotes
         ) {
 
-          if (character === "\r" && nextCharacter === "\n") {
+          row.push(value);
+
+          value = "";
+
+
+        } else if (
+
+          (
+            character === "\n" ||
+            character === "\r"
+          ) &&
+
+          !insideQuotes
+
+        ) {
+
+          if (
+            character === "\r" &&
+            nextCharacter === "\n"
+          ) {
+
             i++;
+
           }
 
+
           row.push(value);
+
           rows.push(row);
 
+
           row = [];
+
           value = "";
+
 
         } else {
 
@@ -304,10 +442,18 @@
 
       }
 
-      if (value.length > 0 || row.length > 0) {
+
+      if (
+        value.length > 0 ||
+        row.length > 0
+      ) {
+
         row.push(value);
+
         rows.push(row);
+
       }
+
 
       return rows;
 
@@ -320,56 +466,94 @@
 
     fetch(sheetURL)
 
+
       .then(response => {
 
         if (!response.ok) {
-          throw new Error("Could not load Quest Board data.");
+
+          throw new Error(
+            "Could not load Quest Board data."
+          );
+
         }
+
 
         return response.text();
 
       })
 
+
       .then(csv => {
 
-        const rows = parseCSV(csv);
+        const rows =
+          parseCSV(csv);
 
-        const headers = rows[0];
 
-        const quests = rows
-          .slice(1)
-          .filter(row => row.length > 1 && row[1].trim() !== "");
+        const headers =
+          rows[0];
+
+
+        const quests =
+          rows
+            .slice(1)
+
+            .filter(
+              row =>
+                row.length > 1 &&
+                row[1].trim() !== ""
+            );
+
 
         const board =
-          document.getElementById("adventure-board");
+          document.getElementById(
+            "adventure-board"
+          );
+
 
         board.innerHTML = "";
 
 
         /*
-          DISPLAY ONLY OPEN, FULL, OR CANCELED QUESTS
+          DISPLAY ONLY OPEN,
+          FULL, OR CANCELED QUESTS
         */
 
-        const visibleQuests = quests.filter(row => {
+        const visibleQuests =
+          quests.filter(row => {
 
-          const status = row[12]?.trim().toUpperCase();
-
-          return (
-            status === "OPEN" ||
-            status === "FULL" ||
-            status === "CANCELED"
-          );
-
-        });
+            const status =
+              row[12]
+                ?.trim()
+                .toUpperCase();
 
 
-        if (visibleQuests.length === 0) {
+            return (
+
+              status === "OPEN" ||
+
+              status === "FULL" ||
+
+              status === "CANCELED"
+
+            );
+
+          });
+
+
+        if (
+          visibleQuests.length === 0
+        ) {
 
           board.innerHTML = `
+
             <div class="empty">
+
               There are currently no quests posted.
+
             </div>
+
           `;
+
 
           return;
 
@@ -401,28 +585,80 @@
           */
 
 
-          const questNumber = row[0] || "";
-          const title = row[1] || "";
-          const dm = row[2] || "";
-          const description = row[3] || "";
-          const reward = row[4] || "";
-          const date = row[5] || "";
-          const time = row[6] || "";
-          const location = row[7] || "";
-          const maximumPlayers = row[8] || "";
-          const characterLevel = row[9] || "";
-          const adventureType = row[10] || "";
-          const playerInformation = row[11] || "";
-          const status = (row[12] || "").toUpperCase();
-          const currentPlayers = row[13] || "0";
-          const availableSlots = row[14] || "";
-          const adventurers = row[15] || "";
+          const questNumber =
+            row[0] || "";
+
+
+          const title =
+            row[1] || "";
+
+
+          const dm =
+            row[2] || "";
+
+
+          const description =
+            row[3] || "";
+
+
+          const reward =
+            row[4] || "";
+
+
+          const date =
+            row[5] || "";
+
+
+          const time =
+            row[6] || "";
+
+
+          const location =
+            row[7] || "";
+
+
+          const maximumPlayers =
+            row[8] || "";
+
+
+          const characterLevel =
+            row[9] || "";
+
+
+          const adventureType =
+            row[10] || "";
+
+
+          const playerInformation =
+            row[11] || "";
+
+
+          const status =
+            (
+              row[12] || ""
+            ).toUpperCase();
+
+
+          const currentPlayers =
+            row[13] || "0";
+
+
+          const availableSlots =
+            row[14] || "";
+
+
+          const adventurers =
+            row[15] || "";
 
 
           const quest =
-            document.createElement("article");
+            document.createElement(
+              "article"
+            );
 
-          quest.className = "quest";
+
+          quest.className =
+            "quest";
 
 
           /*
@@ -431,17 +667,31 @@
 
           let statusHTML = "";
 
-          if (status === "FULL") {
+
+          if (
+            status === "FULL"
+          ) {
 
             statusHTML =
-              `<div class="status full">FULL</div>`;
+              `
+              <div class="status full">
+                FULL
+              </div>
+              `;
 
           }
 
-          if (status === "CANCELED") {
+
+          if (
+            status === "CANCELED"
+          ) {
 
             statusHTML =
-              `<div class="status canceled">CANCELED</div>`;
+              `
+              <div class="status canceled">
+                CANCELED
+              </div>
+              `;
 
           }
 
@@ -453,20 +703,32 @@
           let adventurerHTML =
             "<em>No confirmed adventurers yet.</em>";
 
-          if (adventurers.trim() !== "") {
+
+          if (
+            adventurers.trim() !== ""
+          ) {
 
             const adventurerList =
               adventurers
+
                 .split("\n")
-                .map(adventurer =>
-                  `<li>${adventurer}</li>`
+
+                .map(
+                  adventurer =>
+                    `<li>${adventurer}</li>`
                 )
+
                 .join("");
 
+
             adventurerHTML =
-              `<ul class="adventurers">
+              `
+              <ul class="adventurers">
+
                 ${adventurerList}
-              </ul>`;
+
+              </ul>
+              `;
 
           }
 
@@ -474,23 +736,35 @@
           /*
             SIGN-UP BUTTON
 
-            Only OPEN quests receive a button.
+            Only OPEN quests
+            receive a button.
           */
 
           let signUpButton = "";
 
-          if (status === "OPEN") {
 
-            signUpButton = `
+          if (
+            status === "OPEN"
+          ) {
+
+            signUpButton =
+              `
+
               <a
                 class="signup-button"
+
                 href="${signUpURL}"
+
                 target="_blank"
+
                 onclick="event.stopPropagation();"
               >
+
                 SIGN UP FOR THIS QUEST
+
               </a>
-            `;
+
+              `;
 
           }
 
@@ -501,85 +775,217 @@
 
           quest.innerHTML = `
 
+
             <div class="quest-summary">
 
+
               <div class="quest-number">
+
                 ${questNumber}
+
               </div>
+
 
               <div class="quest-title">
+
                 ${title}
+
               </div>
+
 
               <div class="reward">
+
                 REWARD
+
               </div>
 
+
               <div class="reward-text">
+
                 ${reward}
+
               </div>
+
 
               ${statusHTML}
 
-            </div>
-
-
-            <div class="quest-detail-grid">
-
-  <div class="detail-section description-section">
-    <strong>Description</strong>
-    ${description}
-  </div>
-
-  <div class="detail-section dm-section">
-    <strong>Dungeon Master</strong>
-    ${dm}
-  </div>
-
-  <div class="detail-section date-time-section">
-    <strong>Date / Time</strong>
-    ${date}<br>
-    ${time}
-  </div>
-
-  <div class="detail-section location-section">
-    <strong>Where</strong>
-    ${location}
-  </div>
-
-  <div class="detail-section character-level-section">
-    <strong>Character Level</strong>
-    ${characterLevel}
-  </div>
-
-  <div class="detail-section adventure-type-section">
-    <strong>Adventure Type</strong>
-    ${adventureType}
-  </div>
-
-  <div class="detail-section before-signup-section">
-    <strong>Before You Sign Up</strong>
-    ${playerInformation}
-  </div>
-
-  <div class="detail-section availability-section">
-    <strong>Player Seat Availability</strong>
-
-    <div class="player-count">
-      ${currentPlayers} Filled / ${availableSlots} Available
-    </div>
-  </div>
-
-  <div class="detail-section adventurers-section">
-    <strong>Adventurers Signed Up</strong>
-    ${adventurerHTML}
-  </div>
-
-</div>
-
-${signUpButton}
 
             </div>
+
+
+            <div class="quest-details">
+
+
+              <div class="quest-detail-grid">
+
+
+                <div
+                  class="
+                    detail-section
+                    description-section
+                  "
+                >
+
+                  <strong>
+                    Description
+                  </strong>
+
+                  ${description}
+
+                </div>
+
+
+                <div
+                  class="
+                    detail-section
+                    dm-section
+                  "
+                >
+
+                  <strong>
+                    Dungeon Master
+                  </strong>
+
+                  ${dm}
+
+                </div>
+
+
+                <div
+                  class="
+                    detail-section
+                    date-time-section
+                  "
+                >
+
+                  <strong>
+                    Date / Time
+                  </strong>
+
+                  ${date}
+
+                  <br>
+
+                  ${time}
+
+                </div>
+
+
+                <div
+                  class="
+                    detail-section
+                    location-section
+                  "
+                >
+
+                  <strong>
+                    Where
+                  </strong>
+
+                  ${location}
+
+                </div>
+
+
+                <div
+                  class="
+                    detail-section
+                    character-level-section
+                  "
+                >
+
+                  <strong>
+                    Character Level
+                  </strong>
+
+                  ${characterLevel}
+
+                </div>
+
+
+                <div
+                  class="
+                    detail-section
+                    adventure-type-section
+                  "
+                >
+
+                  <strong>
+                    Adventure Type
+                  </strong>
+
+                  ${adventureType}
+
+                </div>
+
+
+                <div
+                  class="
+                    detail-section
+                    before-signup-section
+                  "
+                >
+
+                  <strong>
+                    Before You Sign Up
+                  </strong>
+
+                  ${playerInformation}
+
+                </div>
+
+
+                <div
+                  class="
+                    detail-section
+                    availability-section
+                  "
+                >
+
+                  <strong>
+                    Player Seat Availability
+                  </strong>
+
+
+                  <div class="player-count">
+
+                    ${currentPlayers}
+                    Filled
+
+                    /
+
+                    ${availableSlots}
+                    Available
+
+                  </div>
+
+                </div>
+
+
+                <div
+                  class="
+                    detail-section
+                    adventurers-section
+                  "
+                >
+
+                  <strong>
+                    Adventurers Signed Up
+                  </strong>
+
+                  ${adventurerHTML}
+
+                </div>
+
+
+              </div>
+
+
+              ${signUpButton}
+
+
+            </div>
+
 
           `;
 
@@ -588,36 +994,58 @@ ${signUpButton}
             EXPAND / COLLAPSE QUEST
           */
 
-          quest.addEventListener("click", () => {
+          quest.addEventListener(
+            "click",
+            () => {
 
-            quest.classList.toggle("expanded");
+              quest.classList.toggle(
+                "expanded"
+              );
 
-          });
+            }
+          );
 
 
-          board.appendChild(quest);
+          board.appendChild(
+            quest
+          );
+
 
         });
+
 
       })
 
 
       .catch(error => {
 
+
         document
-          .getElementById("adventure-board")
+
+          .getElementById(
+            "adventure-board"
+          )
+
           .innerHTML = `
+
             <div class="error">
+
               Could not load quest data.
+
             </div>
+
           `;
 
+
         console.error(error);
+
 
       });
 
 
   </script>
 
+
 </body>
+
 </html>
