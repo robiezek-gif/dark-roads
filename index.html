@@ -4,32 +4,608 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Dark Roads Adventure Board</title>
+  <title>Dark Roads Quest Board</title>
+
+  <style>
+
+    body {
+      margin: 0;
+      background: #263033;
+      color: #f4efe4;
+      font-family: Arial, sans-serif;
+    }
+
+    header {
+      text-align: center;
+      padding: 40px 20px 25px;
+      background: #1d2426;
+      border-bottom: 3px solid #8b6b3f;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      letter-spacing: 1px;
+    }
+
+    header p {
+      margin-top: 10px;
+      color: #d2c4aa;
+    }
+
+    #adventure-board {
+      max-width: 1200px;
+      margin: auto;
+      padding: 40px 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+      gap: 30px;
+    }
+
+    .quest {
+      position: relative;
+      min-height: 420px;
+      cursor: pointer;
+      background-image: url("quest-background.png");
+      background-size: cover;
+      background-position: center;
+      color: #2b1b0e;
+      padding: 40px 35px;
+      box-sizing: border-box;
+      transition: transform 0.2s ease;
+    }
+
+    .quest:hover {
+      transform: scale(1.02);
+    }
+
+    .quest-summary {
+      text-align: center;
+    }
+
+    .quest-number {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .quest-title {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .reward {
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin-top: 25px;
+    }
+
+    .reward-text {
+      margin-top: 5px;
+      font-weight: normal;
+    }
+
+    .status {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 7px 14px;
+      font-weight: bold;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.45);
+    }
+
+    .status.full {
+      color: #7a3a14;
+    }
+
+    .status.canceled {
+      color: #7d1515;
+    }
+
+    .quest-details {
+      display: none;
+      margin-top: 25px;
+      padding-top: 20px;
+      border-top: 2px solid rgba(50,30,15,0.35);
+    }
+
+    .quest.expanded .quest-details {
+      display: block;
+    }
+
+    .quest.expanded {
+      min-height: 700px;
+    }
+
+    .detail-section {
+      margin-bottom: 18px;
+    }
+
+    .detail-section strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .adventurers {
+      margin-top: 8px;
+      padding-left: 20px;
+    }
+
+    .adventurers li {
+      margin-bottom: 5px;
+    }
+
+    .player-count {
+      margin-top: 8px;
+      font-weight: bold;
+    }
+
+    .signup-button {
+      display: inline-block;
+      margin-top: 25px;
+      padding: 12px 22px;
+      background: #5c2418;
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 4px;
+    }
+
+    .signup-button:hover {
+      background: #7b3324;
+    }
+
+    .loading,
+    .error,
+    .empty {
+      grid-column: 1 / -1;
+      text-align: center;
+      font-size: 1.2rem;
+    }
+
+  </style>
 </head>
+
 
 <body>
 
-  <h1>Dark Roads Adventure Board</h1>
+  <header>
+    <h1>Quest Board</h1>
+    <p>Gather your party and choose your adventure.</p>
+  </header>
 
-  <div id="adventure-board">
-    Loading adventures...
-  </div>
+
+  <main id="adventure-board">
+
+    <div class="loading">
+      Loading quests...
+    </div>
+
+  </main>
+
 
   <script>
+
+    /*
+      QUEST BOARD DATA SOURCE
+    */
+
     const sheetURL =
-      "https://docs.google.com/spreadsheets/d/e/2PACX-1vTxJtAlQaAl8J-nMVlHJGS4DuPaethrtaW3PI7HHesKJ8BHZPSNrG2c9qNRgOZfdx_BkWUNiMZYKdf9/pub?gid=0&single=true&output=csv";
+      "https://docs.google.com/spreadsheets/d/e/2PACX-1vScVIpcsVt4LqD782FrmRpmiuWrBOyy-tdLHj9MD2jN6HuQrFDTCgoalQae_D9dNKY2_jdfCG_P3tpI/pub?gid=852622382&single=true&output=csv";
+
+
+    /*
+      PLAYER SIGN-UP FORM
+
+      We will add your actual Google Form responder link here
+      once you give it to me.
+    */
+
+    const signUpURL = "#";
+
+
+    /*
+      CSV PARSER
+    */
+
+    function parseCSV(text) {
+
+      const rows = [];
+      let row = [];
+      let value = "";
+      let insideQuotes = false;
+
+      for (let i = 0; i < text.length; i++) {
+
+        const character = text[i];
+        const nextCharacter = text[i + 1];
+
+        if (character === '"') {
+
+          if (insideQuotes && nextCharacter === '"') {
+            value += '"';
+            i++;
+          } else {
+            insideQuotes = !insideQuotes;
+          }
+
+        } else if (character === "," && !insideQuotes) {
+
+          row.push(value);
+          value = "";
+
+        } else if (
+          (character === "\n" || character === "\r") &&
+          !insideQuotes
+        ) {
+
+          if (character === "\r" && nextCharacter === "\n") {
+            i++;
+          }
+
+          row.push(value);
+          rows.push(row);
+
+          row = [];
+          value = "";
+
+        } else {
+
+          value += character;
+
+        }
+
+      }
+
+      if (value.length > 0 || row.length > 0) {
+        row.push(value);
+        rows.push(row);
+      }
+
+      return rows;
+
+    }
+
+
+    /*
+      LOAD QUEST DATA
+    */
 
     fetch(sheetURL)
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById("adventure-board").innerHTML =
-          "<pre>" + data + "</pre>";
+
+      .then(response => {
+
+        if (!response.ok) {
+          throw new Error("Could not load Quest Board data.");
+        }
+
+        return response.text();
+
       })
+
+      .then(csv => {
+
+        const rows = parseCSV(csv);
+
+        const headers = rows[0];
+
+        const quests = rows
+          .slice(1)
+          .filter(row => row.length > 1 && row[1].trim() !== "");
+
+        const board =
+          document.getElementById("adventure-board");
+
+        board.innerHTML = "";
+
+
+        /*
+          DISPLAY ONLY OPEN, FULL, OR CANCELED QUESTS
+        */
+
+        const visibleQuests = quests.filter(row => {
+
+          const status = row[12]?.trim().toUpperCase();
+
+          return (
+            status === "OPEN" ||
+            status === "FULL" ||
+            status === "CANCELED"
+          );
+
+        });
+
+
+        if (visibleQuests.length === 0) {
+
+          board.innerHTML = `
+            <div class="empty">
+              There are currently no quests posted.
+            </div>
+          `;
+
+          return;
+
+        }
+
+
+        visibleQuests.forEach(row => {
+
+
+          /*
+            QUEST BOARD DATA COLUMNS
+
+            A  Quest Number
+            B  Adventure Title
+            C  DM
+            D  Description
+            E  Reward
+            F  Date
+            G  Time
+            H  Location
+            I  Maximum Players
+            J  Character Level
+            K  Adventure Type
+            L  Player Information
+            M  Status
+            N  Current Players
+            O  Available Slots
+            P  Adventurers
+          */
+
+
+          const questNumber = row[0] || "";
+          const title = row[1] || "";
+          const dm = row[2] || "";
+          const description = row[3] || "";
+          const reward = row[4] || "";
+          const date = row[5] || "";
+          const time = row[6] || "";
+          const location = row[7] || "";
+          const maximumPlayers = row[8] || "";
+          const characterLevel = row[9] || "";
+          const adventureType = row[10] || "";
+          const playerInformation = row[11] || "";
+          const status = (row[12] || "").toUpperCase();
+          const currentPlayers = row[13] || "0";
+          const availableSlots = row[14] || "";
+          const adventurers = row[15] || "";
+
+
+          const quest =
+            document.createElement("article");
+
+          quest.className = "quest";
+
+
+          /*
+            STATUS DISPLAY
+          */
+
+          let statusHTML = "";
+
+          if (status === "FULL") {
+
+            statusHTML =
+              `<div class="status full">FULL</div>`;
+
+          }
+
+          if (status === "CANCELED") {
+
+            statusHTML =
+              `<div class="status canceled">CANCELED</div>`;
+
+          }
+
+
+          /*
+            ADVENTURER LIST
+          */
+
+          let adventurerHTML =
+            "<em>No confirmed adventurers yet.</em>";
+
+          if (adventurers.trim() !== "") {
+
+            const adventurerList =
+              adventurers
+                .split("\n")
+                .map(adventurer =>
+                  `<li>${adventurer}</li>`
+                )
+                .join("");
+
+            adventurerHTML =
+              `<ul class="adventurers">
+                ${adventurerList}
+              </ul>`;
+
+          }
+
+
+          /*
+            SIGN-UP BUTTON
+
+            Only OPEN quests receive a button.
+          */
+
+          let signUpButton = "";
+
+          if (status === "OPEN") {
+
+            signUpButton = `
+              <a
+                class="signup-button"
+                href="${signUpURL}"
+                target="_blank"
+                onclick="event.stopPropagation();"
+              >
+                SIGN UP FOR THIS QUEST
+              </a>
+            `;
+
+          }
+
+
+          /*
+            BUILD QUEST CARD
+          */
+
+          quest.innerHTML = `
+
+            <div class="quest-summary">
+
+              <div class="quest-number">
+                ${questNumber}
+              </div>
+
+              <div class="quest-title">
+                ${title}
+              </div>
+
+              <div class="reward">
+                REWARD
+              </div>
+
+              <div class="reward-text">
+                ${reward}
+              </div>
+
+              ${statusHTML}
+
+            </div>
+
+
+            <div class="quest-details">
+
+
+              <div class="detail-section">
+
+                <strong>Description</strong>
+
+                ${description}
+
+              </div>
+
+
+              <div class="detail-section">
+
+                <strong>When</strong>
+
+                ${date}<br>
+                ${time}
+
+              </div>
+
+
+              <div class="detail-section">
+
+                <strong>Location</strong>
+
+                ${location}
+
+              </div>
+
+
+              <div class="detail-section">
+
+                <strong>Dungeon Master</strong>
+
+                ${dm}
+
+              </div>
+
+
+              <div class="detail-section">
+
+                <strong>Character Level</strong>
+
+                ${characterLevel}
+
+              </div>
+
+
+              <div class="detail-section">
+
+                <strong>Adventure Type</strong>
+
+                ${adventureType}
+
+              </div>
+
+
+              <div class="detail-section">
+
+                <strong>Adventurers Signed Up</strong>
+
+                ${adventurerHTML}
+
+                <div class="player-count">
+
+                  ${currentPlayers} / ${maximumPlayers}
+                  player slots filled
+
+                  <br>
+
+                  ${availableSlots} slots available
+
+                </div>
+
+              </div>
+
+
+              <div class="detail-section">
+
+                <strong>Before You Sign Up</strong>
+
+                ${playerInformation}
+
+              </div>
+
+
+              ${signUpButton}
+
+
+            </div>
+
+          `;
+
+
+          /*
+            EXPAND / COLLAPSE QUEST
+          */
+
+          quest.addEventListener("click", () => {
+
+            quest.classList.toggle("expanded");
+
+          });
+
+
+          board.appendChild(quest);
+
+        });
+
+      })
+
+
       .catch(error => {
-        document.getElementById("adventure-board").innerHTML =
-          "Could not load adventure data.";
+
+        document
+          .getElementById("adventure-board")
+          .innerHTML = `
+            <div class="error">
+              Could not load quest data.
+            </div>
+          `;
+
         console.error(error);
+
       });
+
+
   </script>
 
 </body>
