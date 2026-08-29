@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Dark Roads Adventure Board</title>
+</head>
+
+<body>
+
+  <h1>Dark Roads Adventure Board</h1>
+
+  <div id="adventure-board">
+    Loading adventures...
+  </div>
+
+  <script>
+    const sheetURL =
+      "https://docs.google.com/spreadsheets/d/e/2PACX-1vTxJtAlQaAl8J-nMVlHJGS4DuPaethrtaW3PI7HHesKJ8BHZPSNrG2c9qNRgOZfdx_BkWUNiMZYKdf9/pub?gid=0&single=true&output=csv";
+
+    fetch(sheetURL)
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById("adventure-board").innerHTML =
+          "<pre>" + data + "</pre>";
+      })
+      .catch(error => {
+        document.getElementById("adventure-board").innerHTML =
+          "Could not load adventure data.";
+        console.error(error);
+      });
+  </script>
+
+</body>
+</html>
