@@ -744,10 +744,13 @@
 
           let signUpButton = "";
 
+          if (status === "OPEN") {
 
-          if (
-            status === "OPEN"
-          ) {
+            const questSignUpURL =
+              signUpURL +
+              "?usp=pp_url&entry.769615682=" +
+              encodeURIComponent(title);
+
 
             signUpButton =
               `
@@ -755,7 +758,7 @@
               <a
                 class="signup-button"
 
-                href="${signUpURL}"
+                href="${questSignUpURL}"
 
                 target="_blank"
 
@@ -768,7 +771,7 @@
 
               `;
 
-          }
+        }
 
 
           /*
