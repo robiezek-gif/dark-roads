@@ -25,17 +25,24 @@
     }
 
     .quest {
-      position: relative;
-      min-height: 420px;
-      cursor: pointer;
-      background-image: url("images/quest-background.png");
-      background-size: cover;
-      background-position: center;
-      color: #2b1b0e;
-      padding: 40px 35px;
-      box-sizing: border-box;
-      transition: transform 0.2s ease;
-    }
+  position: relative;
+  height: 460px;
+  cursor: pointer;
+
+  background-image: url("images/quest-background.png");
+  background-size: 100% auto;
+  background-position: top center;
+  background-repeat: no-repeat;
+
+  color: #2b1b0e;
+  padding: 70px 35px 40px;
+
+  box-sizing: border-box;
+
+  overflow: hidden;
+
+  transition: height 0.35s ease;
+}
 
     .quest:hover {
       transform: scale(1.02);
@@ -97,9 +104,12 @@
     }
 
     .quest.expanded {
-      min-height: 700px;
-    }
-
+  height: auto;
+  min-height: 900px;
+      
+  background-size: 100% 100%;
+}
+    
     .detail-section {
       margin-bottom: 18px;
     }
