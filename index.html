@@ -736,42 +736,58 @@
 
 
           /*
-            SIGN-UP BUTTON
+  SIGN-UP BUTTON
+*/
 
-            Only OPEN quests
-            receive a button.
-          */
+let signUpButton = "";
 
-          let signUpButton = "";
+if (status === "OPEN" && Number(availableSlots) > 0) {
 
-          if (status === "OPEN") {
-
-            const questSignUpURL =
-              signUpURL +
-              "?usp=pp_url&entry.769615682=" +
-              encodeURIComponent(title);
+  const questSignUpURL =
+    signUpURL +
+    "?usp=pp_url&entry.769615682=" +
+    encodeURIComponent(title);
 
 
-            signUpButton =
-              `
+  signUpButton =
+    `
 
-              <a
-                class="signup-button"
+    <a
+      class="signup-button"
 
-                href="${questSignUpURL}"
+      href="${questSignUpURL}"
 
-                target="_blank"
+      target="_blank"
 
-                onclick="event.stopPropagation();"
-              >
+      onclick="event.stopPropagation();"
+    >
 
-                SIGN UP FOR THIS QUEST
+      SIGN UP FOR THIS QUEST
 
-              </a>
+    </a>
 
-              `;
+    `;
 
-        }
+}
+
+
+else if (
+  status === "OPEN" &&
+  Number(availableSlots) <= 0
+) {
+
+  signUpButton =
+    `
+
+    <div class="quest-full">
+
+      FULL
+
+    </div>
+
+    `;
+
+}
 
 
           /*
