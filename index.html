@@ -71,6 +71,28 @@
       transition: height 0.35s ease;
     }
 
+    .quest::before {
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    rgba(0, 0, 0, 0.38);
+
+  pointer-events: none;
+
+  z-index: 0;
+}
+
+
+.quest-summary,
+.quest-details {
+  position: relative;
+
+  z-index: 1;
+}
 
     .quest:hover {
       transform: scale(1.02);
